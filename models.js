@@ -8,7 +8,7 @@ const IssueSchema = new Schema({
 	updated_on: Date,
 	created_by: { type: String, required: true },
 	assigned_to: String,
-	open: Boolean,
+	open: { type: Boolean, default: true },
 	status_text: String
 })
 
