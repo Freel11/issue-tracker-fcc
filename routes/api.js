@@ -2,24 +2,66 @@
 const mongoose = require('mongoose')
 const IssueModel = require('../models.js').Issue
 const ProjectModel = require('../models').Project
+const ObjectId = mongoose.Types.ObjectId
 
 module.exports = function (app) {
 
   app.route('/api/issues/:project')
   
-    .get(function (req, res){
+    .get((req, res) => {
       const project = req.params.project;
-      ProjectModel.findOne({name: project}, (err, projectdata) => {
-        if (!projectdata) {
-          res.send("could not find that project")
-        } else {
-          res.json(projectdata.issues)
+      const {
+        issue_title,
+        issue_text,
+        created_on,
+        updated_on,
+        created_by,
+        assigned_to,
+        open,
+        status_text,
+        _id
+      } = req.query
+      ProjectModel.aggregate([
+        { $match: {name: project }},
+        { $unwind: "$issues" },
+        issue_title != undefined 
+          ? { $match: { "issues.issue_title": issue_title } }
+          : { $match: {} },
+        issue_text != undefined
+          ? { $match: { "issues.issue_text": issue_text } }
+          : { $match: {} },
+        created_on != undefined
+          ? { $match: { "issues.created_on": new Date(created_on) } }
+          : { $match: {} },
+        updated_on != undefined
+          ? { $match: { "issues.updated_on": new Date(updated_on) } }
+          : { $match: {} },
+        created_by != undefined
+          ? { $match: { "issues.created_by": created_by } }
+          : { $match: {} },
+        assigned_to != undefined
+          ? { $match: { "issues.assigned_to": assigned_to } }
+          : { $match: {} },
+        open != undefined
+          ? { $match: { "issues.open": open } }
+          : { $match: {} },
+        status_text != undefined
+          ? { $match: { "issues.status_text": status_text } }
+          : { $match: {} },
+        _id != undefined
+          ? { $match: { "issues._id": ObjectId(_id) } }
+          : { $match: {} }
+      ]).exec((err, data) => {
+        if (!data) {
+          res.json([])
+          return
         }
+        res.json(data.map(issue => issue.issues))
       })
 
     })
     
-    .post(function (req, res){
+    .post((req, res) => {
       const project = req.params.project;
       const { 
         issue_title,
@@ -34,8 +76,7 @@ module.exports = function (app) {
 
 
         if (!issue_title || !issue_text || !created_by) {
-          const error = {error: 'required field(s) missing'}
-          res.json(error)
+          res.json({error: 'required field(s) missing'})
           return
         }
 
