@@ -88,7 +88,8 @@ module.exports = function (app) {
           created_by,
           assigned_to,
           open,
-          status_text
+          status_text,
+          _id
         })
 
         ProjectModel.findOne({ name: project }, (err, projectdata) => {
