@@ -99,7 +99,7 @@ module.exports = function (app) {
               if (err || !data) {
                 res.send('There was an issue saving this issue')
               } else {
-                res.json(newIssue)
+                res.json(data)
               }
             })
           } else {
