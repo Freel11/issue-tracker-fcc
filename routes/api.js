@@ -24,6 +24,9 @@ module.exports = function (app) {
       ProjectModel.aggregate([
         { $match: {name: project }},
         { $unwind: "$issues" },
+        _id != undefined
+          ? { $match: { "issues._id": ObjectId(_id) } }
+          : { $match: {} },
         issue_title != undefined 
           ? { $match: { "issues.issue_title": issue_title } }
           : { $match: {} },
@@ -47,9 +50,6 @@ module.exports = function (app) {
           : { $match: {} },
         status_text != undefined
           ? { $match: { "issues.status_text": status_text } }
-          : { $match: {} },
-        _id != undefined
-          ? { $match: { "issues._id": ObjectId(_id) } }
           : { $match: {} }
       ]).exec((err, data) => {
         if (!data) {

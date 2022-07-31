@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
+const ObjectId = Schema.ObjectId
 
 const IssueSchema = new Schema({
 	issue_title: { type: String, required: true },
@@ -9,7 +10,7 @@ const IssueSchema = new Schema({
 	created_by: { type: String, required: true },
 	assigned_to: String,
 	open: { type: Boolean, default: true },
-	status_text: String
+	status_text: String,
 })
 
 const ProjectSchema = new Schema({
