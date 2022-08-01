@@ -81,14 +81,14 @@ module.exports = function (app) {
         }
 
         const newIssue = new IssueModel({
-          issue_title,
-          issue_text,
-          created_on,
-          updated_on,
-          created_by,
-          assigned_to,
-          open,
-          status_text
+          issue_title: issue_title || "",
+          issue_text: issue_text || "",
+          created_on: created_on,
+          updated_on: updated_on,
+          created_by: created_by || "",
+          assigned_to: assigned_to || "",
+          open: open || true,
+          status_text: status_text || ""
         })
 
         ProjectModel.findOne({ name: project }, (err, projectdata) => {
