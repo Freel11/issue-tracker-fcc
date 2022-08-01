@@ -5,12 +5,12 @@ const ObjectId = Schema.ObjectId
 const IssueSchema = new Schema({
 	issue_title: { type: String, required: true },
 	issue_text: { type: String, required: true },
-	created_on: Date,
-	updated_on: Date,
+	created_on: { type: Date, required: false },
+	updated_on: { type: Date, required: false },
 	created_by: { type: String, required: true },
-	assigned_to: String,
+	assigned_to: { type: String, required: false },
 	open: { type: Boolean, default: true },
-	status_text: String,
+	status_text: { type: String, required: false },
 })
 
 const ProjectSchema = new Schema({
