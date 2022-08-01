@@ -128,7 +128,7 @@ module.exports = function (app) {
         open
       } = req.body
 
-      if (_id == undefined) {
+      if (!_id) {
         res.json({error: 'missing _id'})
         return
       }
